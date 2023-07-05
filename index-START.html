@@ -60,12 +60,12 @@
 
 <script>
 
-  function playAudio(event){
-    // if invalid keypressed, do nothing
-    if(![65,83,68,70,71,72,74,75,76].includes(event.keyCode)) return;
-
+  function playAudio(key){
     // selects corresponding audio files
-    const audio = document.querySelector(`audio[data-key="${event.keyCode}"]`)
+    const audio = document.querySelector(`audio[data-key="${key}"]`)
+
+    // if not a valid key(no audio found), do nothing
+    if(!audio) return;
 
     // to replay audio as soon as key pressed
     audio.currentTime = 0;
@@ -73,9 +73,34 @@
     audio.play();
   }
 
+  function showAnimation(key){
+    // selects pressed key
+    let activeKey = document.querySelector(`div[data-key="${key}"]`)
+
+    // checks if key is valid
+    if(!activeKey) return;
+
+    // adds class playing(css) for transition
+    activeKey.classList.add("playing");
+
+    // adds a event listener to remove transition
+    document.querySelectorAll('.key').forEach(
+      key => key.addEventListener('transitionend', function(){
+        this.classList.remove("playing");
+      })
+    );
+
+  }
+
   window.addEventListener('keydown', function(event){
-    playAudio(event);
+    const key = event.keyCode;
+
+    playAudio(key);
+    showAnimation(key);
+
   })
+
+  
 
 </script>
 
